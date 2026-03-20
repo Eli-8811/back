@@ -18,31 +18,41 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    
+    private UserDTO toDto(UserEntity entity) {
+        return UserDTO.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .lastname(entity.getLastname())
+                .email(entity.getEmail())
+                .age(entity.getAge())
+                .gender(entity.getGender())
+                .status(entity.getStatus())
+                .build();
+    }
 
-    // ASPECTO: Manejo de Excepciones (Throws - Delega la responsabilidad)
+    private UserEntity toEntity(UserDTO dto) {
+        UserEntity entity = new UserEntity();
+        entity.setName(dto.getName().trim());
+        entity.setLastname(dto.getLastname().trim());
+        entity.setEmail(dto.getEmail());
+        entity.setAge(dto.getAge());
+        entity.setGender(dto.getGender());
+        return entity;
+    }
+    
     // ASPECTO: Checked Exception (Exception es de tipo Checked)
     @Transactional
-    public UserDTO saveUser(UserDTO userDto) throws Exception {
-        log.info("Iniciando persistencia para: {}", userDto.getEmail());
-        // ASPECTO: Try-Catch-Finally (Estructura de control de excepciones)
-        try {
-            if (userRepository.existsByEmail(userDto.getEmail())) {
-            	// ASPECTO: Unchecked Exception (BusinessException extiende de RuntimeException)
-                throw new BusinessException("El email ya está registrado");
-            }
-            UserEntity entity = toEntity(userDto);
-            UserEntity saved = userRepository.save(entity);
-            return toDto(saved);
-        } catch (BusinessException be) {
-            log.warn("Validación de negocio fallida en registro: {}", be.getMessage());
-            throw be; 
-        } catch (Exception e) {
-            log.error("Fallo crítico de infraestructura al guardar usuario", e);
-            throw new Exception("No se pudo procesar el registro debido a un error interno");
-        } finally {
-        	// ASPECTO: Finally (Se ejecuta siempre, ideal para limpieza de recursos o logs finales)
-            log.info("Operación de guardado finalizada para: {}", userDto.getEmail());
+    public UserDTO saveUser(UserDTO userDto) {
+        log.info("Iniciando persistencia para: {}", userDto.getEmail());        
+        // Validación de negocio: Lanza Unchecked Exception si falla
+        if (userRepository.existsByEmail(userDto.getEmail())) {
+            throw new BusinessException("El email ya está registrado");
         }
+        UserEntity entity = toEntity(userDto);
+        UserEntity saved = userRepository.save(entity);        
+        log.info("Usuario guardado exitosamente: {}", saved.getEmail());
+        return toDto(saved);
     }
 
     @Transactional(readOnly = true)
@@ -85,28 +95,6 @@ public class UserService {
             throw new BusinessException("No se puede eliminar: El usuario no existe");
         }
         userRepository.deleteById(id);
-    }
-    
-    private UserDTO toDto(UserEntity entity) {
-        return UserDTO.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .lastname(entity.getLastname())
-                .email(entity.getEmail())
-                .age(entity.getAge())
-                .gender(entity.getGender())
-                .status(entity.getStatus())
-                .build();
-    }
-
-    private UserEntity toEntity(UserDTO dto) {
-        UserEntity entity = new UserEntity();
-        entity.setName(dto.getName().trim());
-        entity.setLastname(dto.getLastname().trim());
-        entity.setEmail(dto.getEmail());
-        entity.setAge(dto.getAge());
-        entity.setGender(dto.getGender());
-        return entity;
     }
     
 }

@@ -22,7 +22,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<GenericDTO<UserDTO>> createUser(@Valid @RequestBody UserDTO userDto) throws Exception {
+    public ResponseEntity<GenericDTO<UserDTO>> createUser(@Valid @RequestBody UserDTO userDto) {
         log.info("REST request para crear un usuario: {}", userDto.getEmail());
         UserDTO saved = userService.saveUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(GenericDTO.ok("Usuario creado exitosamente", saved));
