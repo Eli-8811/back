@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController // ASPECTO: Patrón de Diseño (Front Controller / MVC)
 @RequiredArgsConstructor
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService userService;
@@ -33,7 +33,7 @@ public class UserController {
     	// ASPECTO: Colecciones (Uso de List para agrupar objetos UserDTO)
         log.info("REST request para obtener lista completa de usuarios activos");
         List<UserDTO> activeUsers = userService.getActiveUsers();
-        return ResponseEntity.ok(GenericDTO.ok("Lista de usuarios activos recuperada", activeUsers));
+        return ResponseEntity.ok(GenericDTO.ok("Lista de usuarios recuperada exitosamente", activeUsers));
     }
 
     @GetMapping("/email/{email}")
