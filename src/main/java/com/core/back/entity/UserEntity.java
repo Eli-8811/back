@@ -4,16 +4,17 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import java.time.LocalDateTime;
 
+//ASPECTO: Clases y Objetos (Definición de una Clase Entidad)
+//ASPECTO: Herencia (UserEntity HEREDA de BaseEntity)
 @Entity
 @Table(name = "users")
 @Getter 
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor // ASPECTO: Método (Constructor por defecto)
 @AllArgsConstructor
-@Builder
-public class UserEntity {
+@Builder // ASPECTO: Patrón de Diseño (Builder Pattern para creación de objetos)
+public class UserEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,23 +37,4 @@ public class UserEntity {
     @Column(unique = true, nullable = false)
     private String email;
 
-    private Boolean status;
-
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "modified_at")
-    private LocalDateTime modifiedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.status = true;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.modifiedAt = LocalDateTime.now();
-    }
-    
 }
