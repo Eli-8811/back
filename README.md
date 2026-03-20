@@ -1,6 +1,6 @@
 # 🚀 Backend Core Project - Spring Boot
 
-Este proyecto es una implementación de referencia de una API REST robusta utilizando **Java 17+** y **Spring Boot**, diseñada para demostrar el dominio de patrones de arquitectura, programación funcional y buenas prácticas de desarrollo.
+Este proyecto es una implementación de referencia de una API REST robusta utilizando **Java 21+** y **Spring Boot**, diseñada para demostrar el dominio de patrones de arquitectura, programación funcional y buenas prácticas de desarrollo.
 
 ## 🛠️ Tecnologías Principales
 * **Framework:** Spring Boot 3.x
